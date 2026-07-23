@@ -1,0 +1,13 @@
+streamlit
+pdfplumber
+pandas
+numpy
+scikit-learn
+nltk
+joblib
+plotly.express
+plotly.graph_objects
+pytest
+pytesseract
+pdf2image
+pillow

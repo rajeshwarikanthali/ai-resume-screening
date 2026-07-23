@@ -1,0 +1,17 @@
+[theme]
+base = "dark"
+primaryColor = "#6C5CE7"
+backgroundColor = "#0A0E1A"
+secondaryBackgroundColor = "#111827"
+textColor = "#E2E8F0"
+font = "sans serif"
+
+[server]
+maxUploadSize = 10
+
+[runner]
+fastReruns = true
+
+[logger]
+level = "info"
+
