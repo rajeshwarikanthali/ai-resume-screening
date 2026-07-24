@@ -317,7 +317,7 @@ st.markdown("""
 def render_ats_gauge(score: float):
     """Render a circular gauge as inline SVG for ATS score."""
     normalized = min(score / 100, 1.0)
-    dash_array = 251.2  # circumference for r=40
+    dash_array = 251.2  
     dash_offset = dash_array * (1 - normalized)
 
     # Color based on score
@@ -470,7 +470,7 @@ with tab1:
             st.warning("⚠️ Please enter a Job Description.")
             st.stop()
         else:
-            # ---- Analysis with progress ----
+            
             results_placeholder = st.container()
 
             with st.status("🔄 **Analyzing candidate...**", expanded=True) as status:
@@ -519,7 +519,7 @@ with tab1:
 
                 status.update(label="✅ **Analysis complete!**", state="complete", expanded=False)
 
-            # ---- Save to DB ----
+           
             status_val = get_candidate_status(ats_score)
             rank = get_candidate_rank(ats_score)
             save_canditate(
@@ -528,7 +528,7 @@ with tab1:
             )
             logger.info("ATS Score: %s, Status: %s, Rank: %s", ats_score, status_val, rank)
 
-            # ---- Status Banner ----
+            
             if status_val == "SHORTLISTED":
                 #st.balloons()
                 st.markdown("""
@@ -553,132 +553,126 @@ with tab1:
             
             col_gauge, col_info = st.columns([1, 2])
             with col_gauge:
-                st.markdown('<div class="card">', unsafe_allow_html=True)
-                st.markdown(render_ats_gauge(ats_score), unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="card">{render_ats_gauge(ats_score)}</div>', unsafe_allow_html=True)
 
             with col_info:
-                st.markdown('<div class="card">', unsafe_allow_html=True)
-                st.markdown('<div class="card-title">Candidate Details</div>', unsafe_allow_html=True)
+                ai_summary_html = f"<p style='color: #94a3b8; font-size: 0.85rem; margin-top: 0.5rem;'><strong>💡 AI Summary:</strong> {ai_summary}</p>" if ai_summary else ""
                 st.markdown(f"""
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem; width: 120px;">👤 Name</td>
-                        <td style="color: #E2E8F0; font-weight: 600;">{name}</td></tr>
-                    <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">📧 Email</td>
-                        <td style="color: #E2E8F0;">{email}</td></tr>
-                    <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">📞 Phone</td>
-                        <td style="color: #E2E8F0;">{phone}</td></tr>
-                    <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">🏆 Status</td>
-                        <td>{status_badge_html(status_val)}</td></tr>
-                    <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">🎯 Rank</td>
-                        <td style="color: #E2E8F0; font-weight: 600;">{rank}</td></tr>
-                </table>
+                <div class="card">
+                    <div class="card-title">Candidate Details</div>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem; width: 120px;">👤 Name</td>
+                            <td style="color: #E2E8F0; font-weight: 600;">{name}</td></tr>
+                        <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">📧 Email</td>
+                            <td style="color: #E2E8F0;">{email}</td></tr>
+                        <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">📞 Phone</td>
+                            <td style="color: #E2E8F0;">{phone}</td></tr>
+                        <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">🏆 Status</td>
+                            <td>{status_badge_html(status_val)}</td></tr>
+                        <tr><td style="color: #8892b0; padding: 4px 8px 4px 0; font-size: 0.85rem;">🎯 Rank</td>
+                            <td style="color: #E2E8F0; font-weight: 600;">{rank}</td></tr>
+                    </table>
+                    {ai_summary_html}
+                </div>
                 """, unsafe_allow_html=True)
-                if ai_summary:
-                    st.markdown(f"<p style='color: #94a3b8; font-size: 0.85rem; margin-top: 0.5rem;'><strong>💡 AI Summary:</strong> {ai_summary}</p>", unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
 
 
             
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">🧠 Skills Found</div>', unsafe_allow_html=True)
-            if skills:
-                st.markdown(skill_badges_html(skills, missing_skills), unsafe_allow_html=True)
-            else:
-                st.markdown("<p style='color: #64748b;'>No skills detected on the resume.</p>", unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            
+            skills_content = skill_badges_html(skills, missing_skills) if skills else "<p style='color: #64748b;'>No skills detected on the resume.</p>"
+            st.markdown(f"""
+            <div class="card">
+                <div class="card-title">🧠 Skills Found</div>
+                {skills_content}
+            </div>
+            """, unsafe_allow_html=True)
 
             
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">📈 Score Breakdown</div>', unsafe_allow_html=True)
+            
+            with st.container(border=True):
+                st.markdown('<div class="card-title">📈 Score Breakdown</div>', unsafe_allow_html=True)
 
-            col_scores, col_radar = st.columns([1, 1])
+                col_scores, col_radar = st.columns([1, 1])
 
-            with col_scores:
-                st.markdown(score_bar_html("Resume Match", round(resume_match, 1), 100, "#6C5CE7"), unsafe_allow_html=True)
-                st.markdown(score_bar_html("Skill Score", skill_score, 40, "#8b5cf6"), unsafe_allow_html=True)
-                st.markdown(score_bar_html("Projects", project_score, 10, "#22C55E"), unsafe_allow_html=True)
-                st.markdown(score_bar_html("Certifications", certification_score, 5, "#EAB308"), unsafe_allow_html=True)
-                st.markdown(score_bar_html("Experience", experience_score, 5, "#F97316"), unsafe_allow_html=True)
+                with col_scores:
+                    st.markdown(score_bar_html("Resume Match", round(resume_match, 1), 100, "#6C5CE7"), unsafe_allow_html=True)
+                    st.markdown(score_bar_html("Skill Score", skill_score, 40, "#8b5cf6"), unsafe_allow_html=True)
+                    st.markdown(score_bar_html("Projects", project_score, 10, "#22C55E"), unsafe_allow_html=True)
+                    st.markdown(score_bar_html("Certifications", certification_score, 5, "#EAB308"), unsafe_allow_html=True)
+                    st.markdown(score_bar_html("Experience", experience_score, 5, "#F97316"), unsafe_allow_html=True)
 
-            with col_radar:
-                radar_categories = ["Resume Match", "Skill Score", "Projects", "Certifications", "Experience"]
-                radar_values = [
-                    round(resume_match, 1),
-                    round((skill_score / 40) * 100, 1),
-                    round((project_score / 10) * 100, 1),
-                    round((certification_score / 5) * 100, 1),
-                    round((experience_score / 5) * 100, 1),
-                ]
-                radar_fig = go.Figure()
-                radar_fig.add_trace(go.Scatterpolar(
-                    r=radar_values + [radar_values[0]],
-                    theta=radar_categories + [radar_categories[0]],
-                    fill="toself",
-                    name="Candidate",
-                    line_color="#6C5CE7",
-                    fillcolor="rgba(108,92,231,0.15)",
-                ))
-                radar_fig.update_layout(
-                    polar=dict(
-                        radialaxis=dict(visible=True, range=[0, 100], color="#64748b"),
-                        bgcolor="rgba(0,0,0,0)",
-                    ),
-                    showlegend=False,
-                    margin=dict(l=30, r=30, t=10, b=10),
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    font_color="#E2E8F0",
-                    height=280,
+                with col_radar:
+                    radar_categories = ["Resume Match", "Skill Score", "Projects", "Certifications", "Experience"]
+                    radar_values = [
+                        round(resume_match, 1),
+                        round((skill_score / 40) * 100, 1),
+                        round((project_score / 10) * 100, 1),
+                        round((certification_score / 5) * 100, 1),
+                        round((experience_score / 5) * 100, 1),
+                    ]
+                    radar_fig = go.Figure()
+                    radar_fig.add_trace(go.Scatterpolar(
+                        r=radar_values + [radar_values[0]],
+                        theta=radar_categories + [radar_categories[0]],
+                        fill="toself",
+                        name="Candidate",
+                        line_color="#6C5CE7",
+                        fillcolor="rgba(108,92,231,0.15)",
+                    ))
+                    radar_fig.update_layout(
+                        polar=dict(
+                            radialaxis=dict(visible=True, range=[0, 100], color="#64748b"),
+                            bgcolor="rgba(0,0,0,0)",
+                        ),
+                        showlegend=False,
+                        margin=dict(l=30, r=30, t=10, b=10),
+                        paper_bgcolor="rgba(0,0,0,0)",
+                        font_color="#E2E8F0",
+                        height=280,
+                    )
+                    st.plotly_chart(radar_fig, use_container_width=True)
+
+
+            
+            
+            with st.container(border=True):
+                st.markdown('<div class="card-title">🎯 Skill Match Against Job Description</div>', unsafe_allow_html=True)
+                col_sm1, col_sm2 = st.columns([1, 1])
+                with col_sm1:
+                    st.metric("Skill Match", f"{skill_match_percentage}%",
+                              delta=f"{skill_match_percentage - 50:+.1f}% vs baseline",
+                              delta_color="normal")
+                with col_sm2:
+                    if missing_skills:
+                        st.markdown(f"<p style='color: #f87171; font-size: 0.85rem;'><strong>Missing Skills ({len(missing_skills)}):</strong></p>", unsafe_allow_html=True)
+                        st.markdown(skill_badges_html(missing_skills, missing_skills), unsafe_allow_html=True)
+                    else:
+                        st.markdown("<p style='color: #22C55E; font-size: 0.9rem;'>✅ Candidate covers all JD-listed skills.</p>", unsafe_allow_html=True)
+
+
+            with st.container(border=True):
+                st.markdown('<div class="card-title">📋 Recruiter Recommendation</div>', unsafe_allow_html=True)
+
+                # Recommendation type mapping to emoji/color
+                rec_emoji = {"success": "✅", "warning": "⚠️", "error": "❌"}
+                rec_color = {"success": "#22C55E", "warning": "#EAB308", "error": "#EF4444"}
+                st.markdown(
+                    f"<p style='color: {rec_color.get(recommendation_type, '#E2E8F0')}; "
+                    f"font-size: 1.05rem; font-weight: 600;'>"
+                    f"{rec_emoji.get(recommendation_type, '')} {recommendation_text}</p>",
+                    unsafe_allow_html=True
                 )
-                st.plotly_chart(radar_fig, use_container_width=True)
 
-            st.markdown('</div>', unsafe_allow_html=True)
+                with st.expander("🔍 Why this recommendation?"):
+                    for reason in recommendation_reasons:
+                        st.markdown(f"- {reason}")
 
-
-            
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">🎯 Skill Match Against Job Description</div>', unsafe_allow_html=True)
-            col_sm1, col_sm2 = st.columns([1, 1])
-            with col_sm1:
-                st.metric("Skill Match", f"{skill_match_percentage}%",
-                          delta=f"{skill_match_percentage - 50:+.1f}% vs baseline",
-                          delta_color="normal")
-            with col_sm2:
-                if missing_skills:
-                    st.markdown(f"<p style='color: #f87171; font-size: 0.85rem;'><strong>Missing Skills ({len(missing_skills)}):</strong></p>", unsafe_allow_html=True)
-                    st.markdown(skill_badges_html(missing_skills, missing_skills), unsafe_allow_html=True)
-                else:
-                    st.markdown("<p style='color: #22C55E; font-size: 0.9rem;'>✅ Candidate covers all JD-listed skills.</p>", unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-            # ---- Row 5: Recommendation & Suggestions ----
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">📋 Recruiter Recommendation</div>', unsafe_allow_html=True)
-
-            # Recommendation type mapping to emoji/color
-            rec_emoji = {"success": "✅", "warning": "⚠️", "error": "❌"}
-            rec_color = {"success": "#22C55E", "warning": "#EAB308", "error": "#EF4444"}
-            st.markdown(
-                f"<p style='color: {rec_color.get(recommendation_type, '#E2E8F0')}; "
-                f"font-size: 1.05rem; font-weight: 600;'>"
-                f"{rec_emoji.get(recommendation_type, '')} {recommendation_text}</p>",
-                unsafe_allow_html=True
-            )
-
-            with st.expander("🔍 Why this recommendation?"):
-                for reason in recommendation_reasons:
-                    st.markdown(f"- {reason}")
-
-            with st.expander("💡 Resume Improvement Suggestions"):
-                for suggestion in resume_suggestions:
-                    st.markdown(f"- {suggestion}")
-
-            st.markdown('</div>', unsafe_allow_html=True)
+                with st.expander("💡 Resume Improvement Suggestions"):
+                    for suggestion in resume_suggestions:
+                        st.markdown(f"- {suggestion}")
 
 
             
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">⭐ Candidate Performance</div>', unsafe_allow_html=True)
             stars = ""
             star_color = "#64748b"
             if ats_score >= 90:
@@ -701,12 +695,13 @@ with tab1:
                 stars = "★"
                 star_color = "#EF4444"
                 label = "Poor Candidate"
-            st.markdown(
-                f"<p style='font-size: 1.8rem; color: {star_color}; letter-spacing: 4px; margin: 0;'>{stars}</p>"
-                f"<p style='color: #94a3b8; font-size: 0.9rem;'>{label}</p>",
-                unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class="card">
+                <div class="card-title">⭐ Candidate Performance</div>
+                <p style='font-size: 1.8rem; color: {star_color}; letter-spacing: 4px; margin: 0;'>{stars}</p>
+                <p style='color: #94a3b8; font-size: 0.9rem;'>{label}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
     else:
         
@@ -753,6 +748,7 @@ with tab2:
             <div class="card" style="text-align: center;">
                 <div class="card-title">Total Candidates</div>
                 <div class="card-value">{total_candidates}</div>
+            </div>
             """, unsafe_allow_html=True)
         with col_s2:
             st.markdown(f"""
@@ -760,6 +756,7 @@ with tab2:
                 <div class="card-title" style="color: #22C55E;">Shortlisted</div>
                 <div class="card-value" style="color: #22C55E;">{shortlisted_count}</div>
                 <div class="card-sub">{round(shortlisted_count/max(total_candidates,1)*100,1)}% of total</div>
+            </div>
             """, unsafe_allow_html=True)
         with col_s3:
             st.markdown(f"""
@@ -767,6 +764,7 @@ with tab2:
                 <div class="card-title" style="color: #EF4444;">Not Shortlisted</div>
                 <div class="card-value" style="color: #EF4444;">{not_shortlisted_count}</div>
                 <div class="card-sub">{round(not_shortlisted_count/max(total_candidates,1)*100,1)}% of total</div>
+            </div>
             """, unsafe_allow_html=True)
         with col_s4:
             avg_score = round(df["ATS Score"].mean(), 1)
@@ -774,144 +772,140 @@ with tab2:
             <div class="card" style="text-align: center;">
                 <div class="card-title">Avg. ATS Score</div>
                 <div class="card-value">{avg_score}</div>
+            </div>
             """, unsafe_allow_html=True)
 
        
         chart_col1, chart_col2 = st.columns(2)
         with chart_col1:
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">ATS Score by Candidate</div>', unsafe_allow_html=True)
-            bar_fig = px.bar(
-                df.sort_values("ATS Score", ascending=False),
-                x="Name",
-                y="ATS Score",
-                color="Status",
-                color_discrete_map={"SHORTLISTED": "#22C55E", "NOT SHORTLISTED": "#EF4444"},
-                text_auto=".0f",
-            )
-            bar_fig.update_traces(textposition="outside", marker_line_width=0)
-            bar_fig.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font_color="#E2E8F0",
-                margin=dict(l=10, r=10, t=10, b=10),
-                height=320,
-                xaxis=dict(showgrid=False),
-                yaxis=dict(showgrid=True, gridcolor="#1e293b", range=[0, 100]),
-            )
-            st.plotly_chart(bar_fig, use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            with st.container(border=True):
+                st.markdown('<div class="card-title">ATS Score by Candidate</div>', unsafe_allow_html=True)
+                bar_fig = px.bar(
+                    df.sort_values("ATS Score", ascending=False),
+                    x="Name",
+                    y="ATS Score",
+                    color="Status",
+                    color_discrete_map={"SHORTLISTED": "#22C55E", "NOT SHORTLISTED": "#EF4444"},
+                    text_auto=".0f",
+                )
+                bar_fig.update_traces(textposition="outside", marker_line_width=0)
+                bar_fig.update_layout(
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    font_color="#E2E8F0",
+                    margin=dict(l=10, r=10, t=10, b=10),
+                    height=320,
+                    xaxis=dict(showgrid=False),
+                    yaxis=dict(showgrid=True, gridcolor="#1e293b", range=[0, 100]),
+                )
+                st.plotly_chart(bar_fig, use_container_width=True)
 
         with chart_col2:
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">Shortlisted vs Not Shortlisted</div>', unsafe_allow_html=True)
-            pie_fig = px.pie(
-                names=["Shortlisted", "Not Shortlisted"],
-                values=[shortlisted_count, not_shortlisted_count],
-                color=["Shortlisted", "Not Shortlisted"],
-                color_discrete_map={"Shortlisted": "#22C55E", "Not Shortlisted": "#EF4444"},
-                hole=0.4,
-            )
-            pie_fig.update_traces(textposition="outside", textinfo="label+percent")
-            pie_fig.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",
-                font_color="#E2E8F0",
-                margin=dict(l=10, r=10, t=10, b=10),
-                height=320,
-                showlegend=False,
-            )
-            st.plotly_chart(pie_fig, use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<div class="card-title">📋 All Candidates</div>', unsafe_allow_html=True)
-
-        col_f1, col_f2, col_f3 = st.columns([1, 1, 2])
-        with col_f1:
-            status_filter = st.selectbox(
-                "Filter by Status",
-                ["All", "SHORTLISTED", "NOT SHORTLISTED"],
-                label_visibility="collapsed"
-            )
-        with col_f2:
-            search_query = st.text_input(
-                "🔍 Search by name...",
-                placeholder="Search name...",
-                label_visibility="collapsed"
-            )
-        with col_f3:
-            st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)  # spacer
-
-
-       
-        filtered_df = df.copy()
-        if status_filter != "All":
-            filtered_df = filtered_df[filtered_df["Status"] == status_filter]
-        if search_query:
-            filtered_df = filtered_df[
-                filtered_df["Name"].str.contains(search_query, case=False, na=False)
-            ]
-
-       
-        display_df = filtered_df.copy()
-        display_df["Status"] = display_df["Status"].apply(
-            lambda x: "✅ SHORTLISTED" if x == "SHORTLISTED" else "❌ NOT SHORTLISTED"
-        )
-
-        st.dataframe(
-            display_df.drop(columns=["ID", "Phone Number"]),
-            use_container_width=True,
-            column_config={
-                "ATS Score": st.column_config.NumberColumn(format="%.1f"),
-                "Resume Match": st.column_config.NumberColumn(format="%.1f"),
-            },
-            height=300,
-        )
-
-        col_dl1, col_dl2, _ = st.columns([1, 1, 2])
-        with col_dl1:
-            csv = df.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="📥 Download Full Report (CSV)",
-                data=csv,
-                file_name="candidates_report.csv",
-                mime="text/csv",
-                use_container_width=True,
-            )
-        with col_dl2:
-            if total_candidates > 0:
-                top_n = st.slider(
-                    "Top candidates to show",
-                    1,
-                    min(10, total_candidates),
-                    min(5, total_candidates),
-                    label_visibility="collapsed",
+            with st.container(border=True):
+                st.markdown('<div class="card-title">Shortlisted vs Not Shortlisted</div>', unsafe_allow_html=True)
+                pie_fig = px.pie(
+                    names=["Shortlisted", "Not Shortlisted"],
+                    values=[shortlisted_count, not_shortlisted_count],
+                    color=["Shortlisted", "Not Shortlisted"],
+                    color_discrete_map={"Shortlisted": "#22C55E", "Not Shortlisted": "#EF4444"},
+                    hole=0.4,
                 )
-            else:
-                top_n = 1
+                pie_fig.update_traces(textposition="outside", textinfo="label+percent")
+                pie_fig.update_layout(
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    font_color="#E2E8F0",
+                    margin=dict(l=10, r=10, t=10, b=10),
+                    height=320,
+                    showlegend=False,
+                )
+                st.plotly_chart(pie_fig, use_container_width=True)
 
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown('<div class="card-title">📋 All Candidates</div>', unsafe_allow_html=True)
 
-        
-        if total_candidates > 0:
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown(f'<div class="card-title">🏆 Top {top_n} Candidates</div>', unsafe_allow_html=True)
-            top_candidates = df.sort_values(by="ATS Score", ascending=False).head(top_n)
-            top_display = top_candidates.copy()
-            top_display["Rank"] = [f"#{i+1}" for i in range(len(top_candidates))]
-            top_display["Status"] = top_display["Status"].apply(
+            col_f1, col_f2, col_f3 = st.columns([1, 1, 2])
+            with col_f1:
+                status_filter = st.selectbox(
+                    "Filter by Status",
+                    ["All", "SHORTLISTED", "NOT SHORTLISTED"],
+                    label_visibility="collapsed"
+                )
+            with col_f2:
+                search_query = st.text_input(
+                    "🔍 Search by name...",
+                    placeholder="Search name...",
+                    label_visibility="collapsed"
+                )
+            with col_f3:
+                st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)  # spacer
+
+
+           
+            filtered_df = df.copy()
+            if status_filter != "All":
+                filtered_df = filtered_df[filtered_df["Status"] == status_filter]
+            if search_query:
+                filtered_df = filtered_df[
+                    filtered_df["Name"].str.contains(search_query, case=False, na=False)
+                ]
+
+           
+            display_df = filtered_df.copy()
+            display_df["Status"] = display_df["Status"].apply(
                 lambda x: "✅ SHORTLISTED" if x == "SHORTLISTED" else "❌ NOT SHORTLISTED"
             )
+
             st.dataframe(
-                top_display[["Rank", "Name", "Email", "ATS Score", "Resume Match", "Status"]],
+                display_df.drop(columns=["ID", "Phone Number"]),
                 use_container_width=True,
                 column_config={
                     "ATS Score": st.column_config.NumberColumn(format="%.1f"),
                     "Resume Match": st.column_config.NumberColumn(format="%.1f"),
                 },
-                height=200,
+                height=300,
             )
-            st.markdown('</div>', unsafe_allow_html=True)
+
+            col_dl1, col_dl2, _ = st.columns([1, 1, 2])
+            with col_dl1:
+                csv = df.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    label="📥 Download Full Report (CSV)",
+                    data=csv,
+                    file_name="candidates_report.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
+            with col_dl2:
+                if total_candidates > 0:
+                    top_n = st.slider(
+                        "Top candidates to show",
+                        1,
+                        min(10, total_candidates),
+                        min(5, total_candidates),
+                        label_visibility="collapsed",
+                    )
+                else:
+                    top_n = 1
+
+        
+        if total_candidates > 0:
+            with st.container(border=True):
+                st.markdown(f'<div class="card-title">🏆 Top {top_n} Candidates</div>', unsafe_allow_html=True)
+                top_candidates = df.sort_values(by="ATS Score", ascending=False).head(top_n)
+                top_display = top_candidates.copy()
+                top_display["Rank"] = [f"#{i+1}" for i in range(len(top_candidates))]
+                top_display["Status"] = top_display["Status"].apply(
+                    lambda x: "✅ SHORTLISTED" if x == "SHORTLISTED" else "❌ NOT SHORTLISTED"
+                )
+                st.dataframe(
+                    top_display[["Rank", "Name", "Email", "ATS Score", "Resume Match", "Status"]],
+                    use_container_width=True,
+                    column_config={
+                        "ATS Score": st.column_config.NumberColumn(format="%.1f"),
+                        "Resume Match": st.column_config.NumberColumn(format="%.1f"),
+                    },
+                    height=200,
+                )
 
     else:
         st.markdown("""
@@ -926,15 +920,10 @@ with tab2:
         </div>
         """, unsafe_allow_html=True)
 
-# ── Footer ──
 st.markdown("""
 <div class="app-footer">
     <p>Developed by <span class="version">Rajeshwari Kanthali</span></p>
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
 
     

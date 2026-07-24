@@ -3,10 +3,7 @@ pdfplumber
 pandas
 numpy
 scikit-learn
-nltk
-joblib
-plotly.express
-plotly.graph_objects
+plotly
 pytest
 pytesseract
 pdf2image

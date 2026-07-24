@@ -1,12 +1,12 @@
-# 📄 AI Resume Screening System
+# AI Resume Screening System
 
 An intelligent, AI-powered resume screening application built with **Streamlit**, **scikit-learn**, **Plotly**, and **SQLite**. It evaluates candidate resumes against job descriptions using NLP, skill matching, and multi-factor scoring — all wrapped in a modern dark-themed UI.
 
 ---
 
-## 🚀 Features
+## Features
 
-### 🔎 Candidate Analysis
+###  Candidate Analysis
 - **PDF Resume Parsing** — Extracts text from PDF resumes (supports OCR fallback for scanned documents)
 - **Candidate Information Extraction** — Automatically extracts name, email, phone, and skills from resumes
 - **ATS Score Calculation** — Multi-factor scoring system:
@@ -20,14 +20,14 @@ An intelligent, AI-powered resume screening application built with **Streamlit**
 - **Recruiter Recommendations** — Generates actionable recommendations and resume improvement suggestions
 - **Radar Chart Visualization** — Visual breakdown of candidate performance across all scoring dimensions
 
-### 📊 Recruiter Dashboard
+###  Recruiter Dashboard
 - **Live Statistics** — Total candidates, shortlisted/not-shortlisted counts, average ATS score
 - **Data Visualization** — Bar charts for ATS scores by candidate, pie charts for shortlisted vs not-shortlisted
 - **Candidate Table** — Sortable, filterable table with status and name search
 - **CSV Export** — Download full candidate reports
 - **Top Candidates** — Configurable leaderboard of top-scoring candidates
 
-### 🎨 UI/UX
+###  UI/UX
 - Dark theme with gradient backgrounds and card-based layout
 - Animated ATS score gauge (SVG-based circular progress)
 - Color-coded skill badges (matched vs missing)
@@ -38,7 +38,7 @@ An intelligent, AI-powered resume screening application built with **Streamlit**
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -53,7 +53,7 @@ An intelligent, AI-powered resume screening application built with **Streamlit**
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 AI Resume Screening/
@@ -69,48 +69,9 @@ AI Resume Screening/
 └── README.md               # Project documentation
 ```
 
----
 
-## ⚙️ Installation
 
-### Prerequisites
-- Python 3.8+
-- Tesseract OCR (for scanned PDF support) — [Download here](https://github.com/tesseract-ocr/tesseract)
-
-### Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd "AI Resume Screening"
-   ```
-
-2. **Create a virtual environment**
-   ```bash
-   python -m venv venv
-   # Activate:
-   # Windows: venv\Scripts\activate
-   # macOS/Linux: source venv/bin/activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Install Tesseract OCR** (optional, for scanned PDFs)
-   - Download from [GitHub](https://github.com/tesseract-ocr/tesseract)
-   - Add to system PATH
-   - Install Python package: `pip install pytesseract pdf2image pillow`
-
-5. **Run the application**
-   ```bash
-   streamlit run app.py
-   ```
-
----
-
-## 📖 Usage
+##  Usage
 
 1. **Upload a Resume** — Click "Browse files" in the sidebar to upload a PDF resume
 2. **Enter Job Description** — Paste the full job description in the text area
@@ -127,7 +88,7 @@ AI Resume Screening/
 
 ---
 
-## 🔢 Scoring Methodology
+##  Scoring Methodology
 
 | Component | Max Score | Description |
 |-----------|-----------|-------------|
@@ -144,7 +105,7 @@ AI Resume Screening/
 
 ---
 
-## 🧠 Skills Dictionary
+##  Skills Dictionary
 
 The application uses a comprehensive `skills.json` file with **250+ skills** across **12 categories**:
 
@@ -163,21 +124,10 @@ The application uses a comprehensive `skills.json` file with **250+ skills** acr
 
 ---
 
-## 🧪 Running Tests
-
-```bash
-pytest tests/
-```
-
----
-
 ## 👩‍💻 Developed By
 
 **Rajeshwari Kanthali**
 
 ---
-
-## 📝 License
-
-This project is for educational and demonstration purposes.
+.
 
