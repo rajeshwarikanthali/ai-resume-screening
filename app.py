@@ -31,10 +31,10 @@ st.markdown("""
         background: linear-gradient(135deg, #0A0E1A 0%, #111827 100%);
     }
 
-    /* ── Hide default Streamlit footer / hamburger ── */
+/* ── Hide default Streamlit footer / hamburger ── */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
+    /* header is kept visible so the default sidebar toggle button works */
 
     /* ── Main container ── */
     .main .block-container {
@@ -310,8 +310,6 @@ st.markdown("""
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 </style>
 """, unsafe_allow_html=True)
-
-
 
 
 def render_ats_gauge(score: float):
@@ -919,11 +917,4 @@ with tab2:
             </p>
         </div>
         """, unsafe_allow_html=True)
-
-st.markdown("""
-<div class="app-footer">
-    <p>Developed by <span class="version">Rajeshwari Kanthali</span></p>
-</div>
-""", unsafe_allow_html=True)
-
     
